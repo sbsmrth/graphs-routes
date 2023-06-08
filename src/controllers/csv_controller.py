@@ -1,16 +1,16 @@
 import csv
-
 class FileCSV:
     @staticmethod
-    def append_to_csv(path, rows):
-        with open(path, 'a', newline='') as f:
+    def append_to_csv(file_name, rows):
+        with open(f"./src/data/{file_name}", 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(rows)
 
-    def read_csv(path, delimit):
+    @staticmethod
+    def read_csv(file_name, delimit):
         rows = []
 
-        with open(path) as csv_file:
+        with open(f"./src/data/{file_name}") as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=delimit)
             line_count = 0
 

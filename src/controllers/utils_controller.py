@@ -15,7 +15,6 @@ class Utils:
         
         return airports
 
-
     @staticmethod
     def load_routes(data):
         routes = []
