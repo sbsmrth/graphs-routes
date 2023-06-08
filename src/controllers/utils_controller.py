@@ -6,9 +6,8 @@ class Utils:
         for airport in data:
             dict_airport = {
                 'name': airport[0],
-                'id': airport[1],
-                'location.': airport[2],
-                'iata': airport[3]
+                'iata': airport[1],
+                'location.': airport[2]
             }
 
             airports.append(dict_airport)

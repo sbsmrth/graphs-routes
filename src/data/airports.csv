@@ -1,11 +1,11 @@
-NAME,ID,LOCATION,IATA
-Helsinki Airport,HEL01,Finland,HEL
-Hong Kong Airport,HGK02,China,HGK
-Hamad Airport,DOH03,Qatar,DOH
-Dubai Airport,DXB04,Dubai,DXB
-Tokyo Haneda Airport,HND05,Japan,HND
-Abu Dabi Airport,AUH06,Emiratos Arabes,AUH
-Zurich Airport,ZRH07,Switzerland,ZRH
-Seul Incheon Airport,ICN08,Corea,ICN
-Singapore Changi Airport,SIN09,Singapore,SIN
-Estambul Airport,IST10,Turquia,IST
+NAME,IATA,LOCATION
+Helsinki Airport,HEL,Finland
+Hong Kong Airport,HGK,China
+Hamad Airport,DOH,Qatar
+Dubai Airport,DXB,Dubai
+Tokyo Haneda Airport,HND,Japan
+Abu Dabi Airport,AUH,Emiratos Arabes
+Zurich Airport,ZRH,Switzerland
+Seul Incheon Airport,ICN,Corea
+Singapore Changi Airport,SIN,Singapore
+Estambul Airport,IST,Turquia

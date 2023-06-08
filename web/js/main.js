@@ -18,12 +18,11 @@ async function manageAirports() {
     }
 
     const name = document.getElementById('airport-f-name').value;
-    const id = document.getElementById('airport-f-id').value;
     const location = document.getElementById('airport-f-location').value;
     const iata = document.getElementById('airport-f-iata').value;
 
-    const rows = [[name, id, location, iata]];
-    eel.append_to_csv('airports.csv', rows);
+    const rows = [[name, iata, location]];
+    eel.add_airport('airports.csv', rows);
 
     form.reset();
   });
@@ -70,14 +69,17 @@ async function manageRoutes() {
       return;
     }
 
-    const destination = document.getElementById('routes-f-destination').value;
+    const originIata = data[originSelect.selectedIndex]['iata']
+    const destinationSelect = document.getElementById('routes-f-destination')
+    const destinationIata = data[destinationSelect.selectedIndex]['iata']
     const time = document.getElementById('routes-f-time').value;
     const distance = document.getElementById('routes-f-distance').value;
 
-    const rows = [[origin, destination, time, distance]];
-    eel.append_to_csv('routes.csv', rows);
+    const rows = [[originIata, destinationIata, time, distance]];
+    eel.add_route('routes.csv', rows);
 
     form.reset();
+    originSelect.dispatchEvent(new Event('change'));
   });
 }
 
