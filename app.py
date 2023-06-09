@@ -42,12 +42,21 @@ def add_airport(file_name, rows):
     airports.append({
         'name': row[0],
         'iata': row[1],
-        'location.': row[2]
+        'location': row[2]
     })
+
+@eel.expose
+def edit_route(row):
+    Utils.edit_route(row)
 
 @eel.expose
 def get_airports():
 
     return airports
+
+@eel.expose
+def get_routes():
+
+    return routes
 
 eel.start("index.html")

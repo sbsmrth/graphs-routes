@@ -1,3 +1,6 @@
+from tempfile import NamedTemporaryFile
+import shutil
+import csv
 class Utils:
     @staticmethod
     def load_airports(data):
@@ -29,3 +32,18 @@ class Utils:
             routes.append(dict_route)
         
         return routes
+    
+    @staticmethod
+    def edit_route(new_row):
+        modified_rows = []
+        with open('./src/data/routes.csv', 'r', newline='') as f:
+            csv_reader = csv.reader(f)
+            for row in csv_reader:
+                if row[0] == new_row[0] and row[1] == new_row[1]:
+                    modified_rows.append(new_row)
+                else:
+                    modified_rows.append(row)
+
+        with open('./src/data/routes.csv', 'w', newline='') as f:
+            csv_writer = csv.writer(f)
+            csv_writer.writerows(modified_rows)

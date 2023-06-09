@@ -5,7 +5,7 @@
     <div class="main-top">
         <p>Explore the universe!</p>
     </div>
-    <div class="main-body">
+    <div class="main-body" id="routes-main">
         <h1>Recent Jobs</h1>
 
         <div class="search_bar">
@@ -45,72 +45,21 @@
             <a href="#">See all</a>
         </div>
 
-        <div class="job_card">
-            <div class="job_details">
-                <div class="img">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                        class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 20px;"">
-                        <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                        <path fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                    </svg>
+        <div id="demo-modal" class="modal">
+            <div class="modal__content">
+                <h1>CSS Only Modal</h1>
+        
+                <p>
+                    You can use the :target pseudo-class to create a modals with Zero JavaScript. Enjoy!
+                </p>
+        
+                <div class="modal__footer">
+                    Made with <i class="fa fa-heart"></i>, by <a href="https://twitter.com/denicmarko" target="_blank">@denicmarko</a>
                 </div>
-                <div class="text">
-                    <h2>UX Designer</h2>
-                    <span>Google Drive - Junior Post</span>
-                </div>
-            </div>
-            <div class="job_salary">
-                <h4>$6.7 - $12.5k /yr</h4>
-                <span>1 days ago</span>
+        
+                <a href="#" class="modal__close">&times;</a>
             </div>
         </div>
-
-        <div class="job_card">
-            <div class="job_details">
-                <div class="img">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                        class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 20px;"">
-                        <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                        <path fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                    </svg>
-                </div>
-                <div class="text">
-                    <h2>JavaScript Developer</h2>
-                    <span>Google - Senior Post</span>
-                </div>
-            </div>
-            <div class="job_salary">
-                <h4>$8.7 - $13.2k /yr</h4>
-                <span>2 days ago</span>
-            </div>
-        </div>
-
-        <div class="job_card">
-            <div class="job_details">
-                <div class="img">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                        class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 20px;"">
-                        <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                        <path fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                    </svg>
-                </div>
-                <div class="text">
-                    <h2>Product Developer</h2>
-                    <span>Facbook - Manager Post</span>
-                </div>
-            </div>
-            <div class="job_salary">
-                <h4>$11 - $18.5k /yr</h4>
-                <span>2 days ago</span>
-            </div>
-        </div>
-
     </div>
 </body>
 
