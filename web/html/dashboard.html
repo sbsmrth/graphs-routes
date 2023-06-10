@@ -3,7 +3,7 @@
 
 <body>
     <div class="main-top">
-        <p>Explore the universe!</p>
+        <p>Airports System</p>
     </div>
     <div class="main-body" id="routes-main">
         <h1>Recent Jobs</h1>
@@ -47,17 +47,40 @@
 
         <div id="demo-modal" class="modal">
             <div class="modal__content">
-                <h1>CSS Only Modal</h1>
+             <div class="airports-container">
+                <div class="title">Edit routes</div>
+                <form id="m-edit-routes">
+                    <div class="user__details">
+                        <div class="input__box">
+                            <span class="details">Origin</span>
+                            <input type="text" id="m-airportorg" required>
+                        </div>
+                        <div class="input__box">
+                            <span class="details">Destination</span>
+                            <input type="text" id="m-airportdest" required>
+                        </div>
+                        <div class="input__box">
+                            <span class="details">Time</span>
+                            <input type="text" id="m-airporttime" required>
+                        </div>
+          
+                        <div class="input__box">
+                            <span class="details">Distance</span>
+                            <input type="text" id="m-airportdist" required>
+                        </div>
+                    </div>
         
-                <p>
-                    You can use the :target pseudo-class to create a modals with Zero JavaScript. Enjoy!
-                </p>
+                    <div class="button">
+                        <input type="submit" value="Edit">
+                    </div>
+                </form>
         
-                <div class="modal__footer">
-                    Made with <i class="fa fa-heart"></i>, by <a href="https://twitter.com/denicmarko" target="_blank">@denicmarko</a>
-                </div>
-        
-                <a href="#" class="modal__close">&times;</a>
+            </div>
+                <a href="#" class="modal__close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </div>

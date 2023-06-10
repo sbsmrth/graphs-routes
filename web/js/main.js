@@ -13,6 +13,20 @@ import { loadPage, okForm, toOptionList } from "./helpers.js";
   manageDashboard();
 })();
 
+function setRoutes(routes) {
+  localStorage.setItem('routes', JSON.stringify(routes))
+}
+
+// function addIataToName({iata, name}) {
+//   const iataToName = JSON.parse(localStorage.getItem('iataToName'))
+//   iataToName[iata] = name
+//   localStorage.setItem('iataToName', JSON.stringify(iataToName))
+// }
+
+function setAirports(airports) {
+  localStorage.setItem('airports', JSON.stringify(airports))
+}
+
 function createCards(cardsInfo) {
   let cardsTemplate = ''
   const iataToName = JSON.parse(localStorage.getItem('iataToName'))
@@ -24,7 +38,7 @@ function createCards(cardsInfo) {
     cardsTemplate += `
     <div class="job_card">
       <div class="job_details">
-          <a class="img" href="#demo-modal">
+          <a class="img pencil_edit" href="#demo-modal">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                   class="bi bi-pencil-square route-card" viewBox="0 0 16 16" style="margin-left: 20px;"">
                   <path
@@ -49,8 +63,6 @@ function createCards(cardsInfo) {
   return cardsTemplate
 }
 
-
-
 async function manageDashboard() {
   await loadPage("./html/dashboard.html", "#app-main");
 
@@ -61,18 +73,41 @@ async function manageDashboard() {
   wrapper.innerHTML = cardsTemplate
   routesMain.appendChild(wrapper)
 
-  document.querySelectorAll('route-card').forEach(c => {
-    c.addEventListener('click', manageModal)
+  document.querySelectorAll('.pencil_edit').forEach((c, index) => {
+    c.addEventListener('click', () => manageModal(index))
   })
 }
 
-function manageModal() {
-  
-  // SIN TERMINAR, POSIBLE ERROR
-  const time = document.getElementById('time-input').value
-  const distance = document.getElementById('distance-input').value
-  
-  
+function manageModal(index) {
+
+  const iataToName = JSON.parse(localStorage.getItem('iataToName'))
+  const routes = JSON.parse(localStorage.getItem('routes'))
+  const route = routes[index]
+  const str_origin = iataToName[route['origin']]
+  const str_destination = iataToName[route['destination']]
+
+  const origin_input = document.getElementById('m-airportorg')
+  origin_input.value = str_origin
+  origin_input.disabled = true
+  const destination_input = document.getElementById('m-airportdest')
+  destination_input.value = str_destination
+  destination_input.disabled = true
+
+  const form = document.getElementById('m-edit-routes')
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (!okForm("#m-edit-routes")) {
+      return;
+    }
+
+    const time = document.getElementById('m-airporttime').value
+    const distance = document.getElementById('m-airportdist').value
+
+    const row = [route["origin"], route["destination"], time, distance]
+    eel.edit_route(row)(setRoutes)
+    manageDashboard()
+  })
 }
 
 async function manageAirports() {
@@ -91,7 +126,8 @@ async function manageAirports() {
     const iata = document.getElementById("airport-f-iata").value;
 
     const rows = [[name, iata, location]];
-    eel.add_airport("airports.csv", rows);
+    eel.add_airport("airports.csv", rows)(setAirports);
+    // addIataToName({ iata, name })
 
     form.reset();
   });
@@ -101,7 +137,8 @@ async function manageRoutes() {
   await loadPage("./html/routes-form.html", "#app-main");
 
   const form = document.getElementById("reg-f-routes");
-  const data = await eel.get_airports()();
+  const data = JSON.parse(localStorage.getItem('airports'))
+  let filterData = []
   data.forEach((a) => (a.toString = `${a["name"]} (${a["iata"]})`));
 
   const originSelect = document.getElementById("routes-f-origin");
@@ -114,10 +151,10 @@ async function manageRoutes() {
   originSelect.innerHTML = originOptions;
 
   originSelect.addEventListener("change", () => {
-    const currentText = data[originSelect.selectedIndex]["iata"];
-    const newData = data.filter((a) => a["iata"] != currentText);
+    const currentIata = data[originSelect.selectedIndex]["iata"];
+    filterData = data.filter((a) => a["iata"] != currentIata);
     const destinationOptions = toOptionList({
-      items: newData,
+      items: filterData,
       value: "toString",
       text: "toString",
     });
@@ -137,16 +174,42 @@ async function manageRoutes() {
 
     const originIata = data[originSelect.selectedIndex]["iata"];
     const destinationSelect = document.getElementById("routes-f-destination");
-    const destinationIata = data[destinationSelect.selectedIndex]["iata"];
+    const destinationIata = filterData[destinationSelect.selectedIndex]["iata"];
     const time = document.getElementById("routes-f-time").value;
     const distance = document.getElementById("routes-f-distance").value;
 
     const rows = [[originIata, destinationIata, time, distance]];
-    eel.add_route("routes.csv", rows);
+    eel.add_route("routes.csv", rows)(setRoutes);
 
     form.reset();
     originSelect.dispatchEvent(new Event("change"));
   });
+}
+
+async function showAirports() {
+  await loadPage("./html/airports.html", "#app-main");
+  const airports = JSON.parse(localStorage.getItem('airports'))
+
+  const fragment = new DocumentFragment()
+  airports.forEach(a => {
+    const div = document.createElement('div')
+    div.className = 'airport_card'
+    const iataSpan = document.createElement('span')
+    iataSpan.textContent = a['iata']
+    const nameSpan = document.createElement('span')
+    nameSpan.className = 'span_name'
+    nameSpan.textContent = a['name']
+
+    div.appendChild(iataSpan)
+    div.appendChild(nameSpan)
+
+    fragment.appendChild(div)
+
+  })
+
+  const wrapper = document.querySelector('.all_airport')
+  wrapper.appendChild(fragment)
+
 }
 
 const dashboard_btn = document.getElementById("dashboard-btn");
@@ -166,3 +229,7 @@ const reg_routes = document.getElementById("reg-routes");
 reg_routes.addEventListener("click", async () => {
   manageRoutes();
 });
+
+const allAiports = document.getElementById('airports-btn')
+
+allAiports.addEventListener('click', showAirports)

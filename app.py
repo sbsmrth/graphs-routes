@@ -2,13 +2,24 @@ import eel
 from src.controllers.csv_controller import FileCSV
 from src.controllers.utils_controller import Utils
 
-# routes
-routes_csv = FileCSV.read_csv('routes.csv', ',')
-routes = Utils.load_routes(routes_csv)
+def set_routes():
+    routes = []
 
-# airports
-airports_csv = FileCSV.read_csv('airports.csv', ',')
-airports = Utils.load_airports(airports_csv)
+    routes_csv = FileCSV.read_csv('routes.csv', ',')
+    routes = Utils.load_routes(routes_csv)
+
+    return routes
+
+def set_airports():
+    airports = []
+
+    airports_csv = FileCSV.read_csv('airports.csv', ',')
+    airports = Utils.load_airports(airports_csv)
+
+    return airports
+
+routes = set_routes()
+airports = set_airports()
 
 eel.init("web")
 
@@ -29,6 +40,8 @@ def add_route(file_name, rows):
         'distance': int(row[3])
     })
 
+    return routes
+
 @eel.expose
 def add_airport(file_name, rows):
     global airports
@@ -45,9 +58,12 @@ def add_airport(file_name, rows):
         'location': row[2]
     })
 
+    return airports
+
 @eel.expose
 def edit_route(row):
     Utils.edit_route(row)
+    return set_routes()
 
 @eel.expose
 def get_airports():

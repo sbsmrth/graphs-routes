@@ -1,5 +1,6 @@
 @import url('./airport_form.css');
 @import url('./modal.css');
+@import url('./airports.css');
 
 *{
   margin: 0;
@@ -58,9 +59,6 @@ li{
 li a{
   font-size: 16px;
   color: rgb(85, 83, 83);
-}
-.nav-item{
-
 }
 nav i{
   width: 50px;
