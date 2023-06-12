@@ -1,6 +1,34 @@
 from matplotlib import pyplot as plt
 import networkx as nx
 import matplotlib.pyplot as plt
+import eel
+from src.controllers.csv_controller import FileCSV
+from src.controllers.utils_controller import Utils
+from src.graphs.graph import GraphClass
+
+def set_routes():
+    routes_csv = FileCSV.read_csv('routes.csv', ',')
+    routes = Utils.load_routes(routes_csv)
+
+    return [routes_csv, routes]
+
+def set_airports():
+    airports_csv = FileCSV.read_csv('airports.csv', ',')
+    airports = Utils.load_airports(airports_csv)
+
+    return [airports_csv, airports]
+
+all_routes = set_routes()
+routes_csv = all_routes[0]
+routes = all_routes[1]
+
+all_airports = set_airports()
+airports_csv = all_airports[0]
+airports = all_airports[1]
+
+from matplotlib import pyplot as plt
+import networkx as nx
+
 
 class GraphClass:
     def __init__(self):
@@ -89,3 +117,16 @@ class GraphClass:
             labels = nx.get_edge_attributes(self.G, 'weight')
             nx.draw_networkx_edge_labels(self.G, self.pos, edge_labels=labels, ax=ax)
         plt.draw()
+
+       
+if __name__ == '__main__':
+    graph = GraphClass()
+
+    for item in routes:
+        graph.add_edge(item["origin"], item["destination"], item["time"])
+
+    shortest_path = graph.dijkstra('HEL', 'HND')
+
+    graph.complete_graph()
+    graph.short_path_network(shortest_path)
+     
