@@ -79,13 +79,13 @@ class GraphClass:
             nx.draw_networkx(self.G, self.pos, ax=ax, node_color=[self.node_colors.get(node, "#FFD95A") for node in self.G.nodes()],
                          edge_color="#C07F00")
             nx.draw_networkx_edges(path_graph, self.pos, edge_color="#4C3D3D", width=2, ax=ax)
-            ax.set_title('Camino más corto')
+            ax.set_title('Shortest route')
             labels = nx.get_edge_attributes(self.G, 'weight')
             nx.draw_networkx_edge_labels(self.G, self.pos, edge_labels=labels, ax=ax)
             
         else:
             nx.draw_networkx(self.G, self.pos, ax=ax, node_color="#FFD95A", edge_color="#C07F00")
-            ax.set_title('Grafo Normal')
+            ax.set_title('Complete')
             labels = nx.get_edge_attributes(self.G, 'weight')
             nx.draw_networkx_edge_labels(self.G, self.pos, edge_labels=labels, ax=ax)
         plt.draw()
