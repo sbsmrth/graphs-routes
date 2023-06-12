@@ -28,7 +28,6 @@ class GraphClass:
         self.figComplete.canvas.mpl_connect('motion_notify_event', self.move_nodeComplete)
         self.figComplete.canvas.mpl_connect('button_release_event', self.release_node)
         self.figComplete.canvas.manager.full_screen_toggle()  # Activa/desactiva el modo de pantalla completa para la figura 1
-
         plt.show()
 
     def short_path_network(self, shortest_path):
@@ -94,6 +93,7 @@ class GraphClass:
 
     def redrawShort (self):
         plt.clf()
+
         self.axShort= self.figShort.add_subplot(111)
         nx.draw_networkx(self.G, self.pos, ax=self.axShort, node_color=[self.node_colors.get(node, "#FFD95A") for node in self.G.nodes()],
                          edge_color="#C07F00")

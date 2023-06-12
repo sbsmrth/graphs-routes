@@ -1,38 +1,38 @@
 import { loadPage, okForm, toOptionList } from "./helpers.js";
 
 window.addEventListener("load", () => {
-  window.resizeTo(screen.availWidth, screen.availHeight);   
-  window.moveTo(0,0);   
+  window.resizeTo(screen.availWidth, screen.availHeight);
+  window.moveTo(0, 0);
 });
 
 (async () => {
-  const airports = await eel.get_airports()()
-  const routes = await eel.get_routes()()
-  const iataToName = {}
-  airports.forEach(a => {
-    iataToName[a.iata] = a.name
-  })
-  localStorage.setItem('iataToName', JSON.stringify(iataToName))
-  setRoutes(routes)
-  setAirports(airports)
+  const airports = await eel.get_airports()();
+  const routes = await eel.get_routes()();
+  const iataToName = {};
+  airports.forEach((a) => {
+    iataToName[a.iata] = a.name;
+  });
+  localStorage.setItem("iataToName", JSON.stringify(iataToName));
+  setRoutes(routes);
+  setAirports(airports);
   manageDashboard();
 })();
 
 function setRoutes(routes) {
-  localStorage.setItem('routes', JSON.stringify(routes))
+  localStorage.setItem("routes", JSON.stringify(routes));
 }
 
 function setAirports(airports) {
-  localStorage.setItem('airports', JSON.stringify(airports))
+  localStorage.setItem("airports", JSON.stringify(airports));
 }
 
 function createCards(cardsInfo) {
-  let cardsTemplate = ''
-  const iataToName = JSON.parse(localStorage.getItem('iataToName'))
+  let cardsTemplate = "";
+  const iataToName = JSON.parse(localStorage.getItem("iataToName"));
 
-  cardsInfo.forEach(c => {
-    const origin = c['origin']
-    const destination = c['destination']
+  cardsInfo.forEach((c) => {
+    const origin = c["origin"];
+    const destination = c["destination"];
 
     cardsTemplate += `
     <div class="job_card">
@@ -52,29 +52,29 @@ function createCards(cardsInfo) {
           </div>
       </div>
       <div class="job_salary">
-          <h4>${c['time']} minutes</h4>
-          <span>${c['distance']} km</span>
+          <h4>${c["time"]} minutes</h4>
+          <span>${c["distance"]} km</span>
       </div>
     </div>
     `;
-  })
+  });
 
-  return cardsTemplate
+  return cardsTemplate;
 }
 
 async function manageDashboard() {
   await loadPage("./html/dashboard.html", "#app-main");
 
-  const routes = JSON.parse(localStorage.getItem('routes'))
-  const iataToName = JSON.parse(localStorage.getItem('iataToName'))
-  
-  const routesOrigins = routes.map(route => (
-    {
-      origin: route["origin"]
-    }
-  ))
+  const routes = JSON.parse(localStorage.getItem("routes"));
+  const iataToName = JSON.parse(localStorage.getItem("iataToName"));
 
-  routesOrigins.forEach((a) => a.toString = `${iataToName[a["origin"]]} (${a["origin"]})`);
+  const routesOrigins = routes.map((route) => ({
+    origin: route["origin"],
+  }));
+
+  routesOrigins.forEach(
+    (a) => (a.toString = `${iataToName[a["origin"]]} (${a["origin"]})`)
+  );
 
   const originOptions = toOptionList({
     items: routesOrigins,
@@ -82,16 +82,18 @@ async function manageDashboard() {
     text: "toString",
   });
 
-
-  const originSelect = document.getElementById('search_origin')
-  originSelect.innerHTML = originOptions
+  const originSelect = document.getElementById("search_origin");
+  originSelect.innerHTML = originOptions;
 
   originSelect.addEventListener("change", () => {
     const currentValue = originSelect.value;
-    const iata = getIata(currentValue)
+    const iata = getIata(currentValue);
 
-    const destForIata = routes.filter(route => route["origin"] == iata)
-    destForIata.forEach((a) => a.toString = `${iataToName[a["destination"]]} (${a["destination"]})`);
+    const destForIata = routes.filter((route) => route["origin"] == iata);
+    destForIata.forEach(
+      (a) =>
+        (a.toString = `${iataToName[a["destination"]]} (${a["destination"]})`)
+    );
 
     const destinationOptions = toOptionList({
       items: destForIata,
@@ -99,72 +101,75 @@ async function manageDashboard() {
       text: "toString",
     });
 
-    document.getElementById('search_destination').innerHTML = destinationOptions
-  })
+    document.getElementById("search_destination").innerHTML =
+      destinationOptions;
+  });
 
   originSelect.dispatchEvent(new Event("change"));
 
-  const filterBtn = document.getElementById('filter-route-btn')
+  const filterBtn = document.getElementById("filter-route-btn");
 
-  filterBtn.addEventListener('click', () => {
-    const originIata = getIata(originSelect.value)
+  filterBtn.addEventListener("click", () => {
+    const originIata = getIata(originSelect.value);
     const destinationSelect = document.getElementById("search_destination");
-    const destinationIata = getIata(destinationSelect.value)
-    const filter = document.getElementById('search_kind').value.toLowerCase()
+    const destinationIata = getIata(destinationSelect.value);
+    const filter = document.getElementById("search_kind").value.toLowerCase();
 
-    const newRoutes = routes.filter(route => route["origin"] == originIata && route["destination"] == destinationIata)
-    const cardsTemplate = createCards(newRoutes)
-    document.getElementById('routes-cards').innerHTML = cardsTemplate
+    const newRoutes = routes.filter(
+      (route) =>
+        route["origin"] == originIata && route["destination"] == destinationIata
+    );
+    const cardsTemplate = createCards(newRoutes);
+    document.getElementById("routes-cards").innerHTML = cardsTemplate;
 
-    eel.shortes_path_gph(routes, originIata, destinationIata, filter)
-  })
+    eel.shortes_path_gph(routes, originIata, destinationIata, filter);
+  });
 
   const cardsTemplate = createCards(routes);
-  const routesCards = document.getElementById('routes-cards')
-  routesCards.innerHTML = cardsTemplate
-  
-  document.querySelectorAll('.pencil_edit').forEach((c, index) => {
-    c.addEventListener('click', () => manageModal(index))
-  })
+  const routesCards = document.getElementById("routes-cards");
+  routesCards.innerHTML = cardsTemplate;
+
+  document.querySelectorAll(".pencil_edit").forEach((c, index) => {
+    c.addEventListener("click", () => manageModal(index));
+  });
 }
 
 function getIata(str) {
   const matches = str.match(/\((.*?)\)/g);
   const iata = matches ? matches[matches.length - 1].slice(1, -1) : null;
 
-  return iata
+  return iata;
 }
 
 function manageModal(index) {
+  const iataToName = JSON.parse(localStorage.getItem("iataToName"));
+  const routes = JSON.parse(localStorage.getItem("routes"));
+  const route = routes[index];
+  const str_origin = iataToName[route["origin"]];
+  const str_destination = iataToName[route["destination"]];
 
-  const iataToName = JSON.parse(localStorage.getItem('iataToName'))
-  const routes = JSON.parse(localStorage.getItem('routes'))
-  const route = routes[index]
-  const str_origin = iataToName[route['origin']]
-  const str_destination = iataToName[route['destination']]
+  const origin_input = document.getElementById("m-airportorg");
+  origin_input.value = str_origin;
+  origin_input.disabled = true;
+  const destination_input = document.getElementById("m-airportdest");
+  destination_input.value = str_destination;
+  destination_input.disabled = true;
 
-  const origin_input = document.getElementById('m-airportorg')
-  origin_input.value = str_origin
-  origin_input.disabled = true
-  const destination_input = document.getElementById('m-airportdest')
-  destination_input.value = str_destination
-  destination_input.disabled = true
-
-  const form = document.getElementById('m-edit-routes')
-  form.addEventListener('submit', e => {
+  const form = document.getElementById("m-edit-routes");
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     if (!okForm("#m-edit-routes")) {
       return;
     }
 
-    const time = document.getElementById('m-airporttime').value
-    const distance = document.getElementById('m-airportdist').value
+    const time = document.getElementById("m-airporttime").value;
+    const distance = document.getElementById("m-airportdist").value;
 
-    const row = [route["origin"], route["destination"], time, distance]
-    eel.edit_route(row)(setRoutes)
-    manageDashboard()
-  })
+    const row = [route["origin"], route["destination"], time, distance];
+    eel.edit_route(row)(setRoutes);
+    manageDashboard();
+  });
 }
 
 async function manageAirports() {
@@ -193,13 +198,9 @@ async function manageRoutes() {
   await loadPage("./html/routes-form.html", "#app-main");
 
   const form = document.getElementById("reg-f-routes");
-  const data = JSON.parse(localStorage.getItem('airports'))
-  let filterData = []
-  data.forEach((a) => {
-    if (!a.toString) {
-      a.toString = `${a["name"]} (${a["iata"]})`
-    }
-  });
+  const data = JSON.parse(localStorage.getItem("airports"));
+  let filterData = [];
+  data.forEach((a) => a.toString = `${a["name"]} (${a["iata"]})`);
 
   const originSelect = document.getElementById("routes-f-origin");
   const originOptions = toOptionList({
@@ -248,28 +249,26 @@ async function manageRoutes() {
 
 async function showAirports() {
   await loadPage("./html/airports.html", "#app-main");
-  const airports = JSON.parse(localStorage.getItem('airports'))
+  const airports = JSON.parse(localStorage.getItem("airports"));
 
-  const fragment = new DocumentFragment()
-  airports.forEach(a => {
-    const div = document.createElement('div')
-    div.className = 'airport_card'
-    const iataSpan = document.createElement('span')
-    iataSpan.textContent = a['iata']
-    const nameSpan = document.createElement('span')
-    nameSpan.className = 'span_name'
-    nameSpan.textContent = a['name']
+  const fragment = new DocumentFragment();
+  airports.forEach((a) => {
+    const div = document.createElement("div");
+    div.className = "airport_card";
+    const iataSpan = document.createElement("span");
+    iataSpan.textContent = a["iata"];
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "span_name";
+    nameSpan.textContent = a["name"];
 
-    div.appendChild(iataSpan)
-    div.appendChild(nameSpan)
+    div.appendChild(iataSpan);
+    div.appendChild(nameSpan);
 
-    fragment.appendChild(div)
+    fragment.appendChild(div);
+  });
 
-  })
-
-  const wrapper = document.querySelector('.all_airport')
-  wrapper.appendChild(fragment)
-
+  const wrapper = document.querySelector(".all_airport");
+  wrapper.appendChild(fragment);
 }
 
 const dashboard_btn = document.getElementById("dashboard-btn");
@@ -290,17 +289,22 @@ reg_routes.addEventListener("click", async () => {
   manageRoutes();
 });
 
-const allAiports = document.getElementById('airports-btn')
+const allAiports = document.getElementById("airports-btn");
 
-allAiports.addEventListener('click', showAirports)
+allAiports.addEventListener("click", showAirports);
 
-const graphTime= document.getElementById('graph-time')
-const graphDistance = document.getElementById('graph-distance')
+const graphTime = document.getElementById("graph-time");
+const graphDistance = document.getElementById("graph-distance");
+const logoutBtn = document.getElementById('logout-btn')
 
-graphTime.addEventListener('click', () => {
-  eel.full_graph('time')
-})
+graphTime.addEventListener("click", () => {
+  eel.full_graph("time");
+});
 
-graphDistance.addEventListener('click', () => {
-  eel.full_graph('distance')
+graphDistance.addEventListener("click", () => {
+  eel.full_graph("distance");
+});
+
+logoutBtn.addEventListener('click', () => {
+  window.close()
 })
