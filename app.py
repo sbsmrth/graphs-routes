@@ -79,13 +79,16 @@ def get_routes():
 
 @eel.expose
 def shortes_path_gph(routes, origin, destination, option):  
-
     graph = GraphClass()
 
     for r in routes:
         graph.add_edge(r["origin"], r["destination"], r[option])
 
-    shortest_path = graph.dijkstra(origin, destination)
+    try:
+        shortest_path = graph.dijkstra(origin, destination)
+    except:
+        return "404"
+    
     graph.short_path_network(shortest_path)
 
 @eel.expose

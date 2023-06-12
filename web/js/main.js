@@ -65,19 +65,13 @@ function createCards(cardsInfo) {
 async function manageDashboard() {
   await loadPage("./html/dashboard.html", "#app-main");
 
+  const data = JSON.parse(localStorage.getItem("airports"));
   const routes = JSON.parse(localStorage.getItem("routes"));
-  const iataToName = JSON.parse(localStorage.getItem("iataToName"));
-
-  const routesOrigins = routes.map((route) => ({
-    origin: route["origin"],
-  }));
-
-  routesOrigins.forEach(
-    (a) => (a.toString = `${iataToName[a["origin"]]} (${a["origin"]})`)
-  );
+  let filterData = [];
+  data.forEach((a) => (a.toString = `${a["name"]} (${a["iata"]})`));
 
   const originOptions = toOptionList({
-    items: routesOrigins,
+    items: data,
     value: "toString",
     text: "toString",
   });
@@ -86,33 +80,26 @@ async function manageDashboard() {
   originSelect.innerHTML = originOptions;
 
   originSelect.addEventListener("change", () => {
-    const currentValue = originSelect.value;
-    const iata = getIata(currentValue);
-
-    const destForIata = routes.filter((route) => route["origin"] == iata);
-    destForIata.forEach(
-      (a) =>
-        (a.toString = `${iataToName[a["destination"]]} (${a["destination"]})`)
-    );
-
+    const currentIata = data[originSelect.selectedIndex]["iata"];
+    filterData = data.filter((a) => a["iata"] != currentIata);
     const destinationOptions = toOptionList({
-      items: destForIata,
+      items: filterData,
       value: "toString",
       text: "toString",
     });
 
-    document.getElementById("search_destination").innerHTML =
-      destinationOptions;
+    const destinationSelect = document.getElementById("search_destination");
+    destinationSelect.innerHTML = destinationOptions;
   });
 
   originSelect.dispatchEvent(new Event("change"));
 
   const filterBtn = document.getElementById("filter-route-btn");
 
-  filterBtn.addEventListener("click", () => {
-    const originIata = getIata(originSelect.value);
+  filterBtn.addEventListener("click", async () => {
+    const originIata = data[originSelect.selectedIndex]["iata"];
     const destinationSelect = document.getElementById("search_destination");
-    const destinationIata = getIata(destinationSelect.value);
+    const destinationIata = filterData[destinationSelect.selectedIndex]["iata"];
     const filter = document.getElementById("search_kind").value.toLowerCase();
 
     const newRoutes = routes.filter(
@@ -120,9 +107,16 @@ async function manageDashboard() {
         route["origin"] == originIata && route["destination"] == destinationIata
     );
     const cardsTemplate = createCards(newRoutes);
-    document.getElementById("routes-cards").innerHTML = cardsTemplate;
+    if (cardsTemplate) {
+      document.getElementById("routes-cards").innerHTML = cardsTemplate;
 
-    eel.shortes_path_gph(routes, originIata, destinationIata, filter);
+      eel.shortes_path_gph(routes, originIata, destinationIata, filter);
+    }
+
+    const err = await eel.shortes_path_gph(routes, originIata, destinationIata, filter)();
+    if (err) {
+      alert('There is no a conection between the airports')
+    }
   });
 
   const cardsTemplate = createCards(routes);
@@ -132,13 +126,6 @@ async function manageDashboard() {
   document.querySelectorAll(".pencil_edit").forEach((c, index) => {
     c.addEventListener("click", () => manageModal(index));
   });
-}
-
-function getIata(str) {
-  const matches = str.match(/\((.*?)\)/g);
-  const iata = matches ? matches[matches.length - 1].slice(1, -1) : null;
-
-  return iata;
 }
 
 function manageModal(index) {
@@ -200,7 +187,7 @@ async function manageRoutes() {
   const form = document.getElementById("reg-f-routes");
   const data = JSON.parse(localStorage.getItem("airports"));
   let filterData = [];
-  data.forEach((a) => a.toString = `${a["name"]} (${a["iata"]})`);
+  data.forEach((a) => (a.toString = `${a["name"]} (${a["iata"]})`));
 
   const originSelect = document.getElementById("routes-f-origin");
   const originOptions = toOptionList({
@@ -295,7 +282,7 @@ allAiports.addEventListener("click", showAirports);
 
 const graphTime = document.getElementById("graph-time");
 const graphDistance = document.getElementById("graph-distance");
-const logoutBtn = document.getElementById('logout-btn')
+const logoutBtn = document.getElementById("logout-btn");
 
 graphTime.addEventListener("click", () => {
   eel.full_graph("time");
@@ -305,6 +292,6 @@ graphDistance.addEventListener("click", () => {
   eel.full_graph("distance");
 });
 
-logoutBtn.addEventListener('click', () => {
-  window.close()
-})
+logoutBtn.addEventListener("click", () => {
+  window.close();
+});
