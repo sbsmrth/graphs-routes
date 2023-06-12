@@ -1,7 +1,11 @@
 import { loadPage, okForm, toOptionList } from "./helpers.js";
 
+window.addEventListener("load", () => {
+  window.resizeTo(screen.availWidth, screen.availHeight);   
+  window.moveTo(0,0);   
+});
+
 (async () => {
-  eel.set_win_size(window.innerWidth, window.innerHeight)
   const airports = await eel.get_airports()()
   const routes = await eel.get_routes()()
   const iataToName = {}
@@ -9,8 +13,8 @@ import { loadPage, okForm, toOptionList } from "./helpers.js";
     iataToName[a.iata] = a.name
   })
   localStorage.setItem('iataToName', JSON.stringify(iataToName))
-  localStorage.setItem('routes', JSON.stringify(routes))
-  localStorage.setItem('airports', JSON.stringify(airports))
+  setRoutes(routes)
+  setAirports(airports)
   manageDashboard();
 })();
 

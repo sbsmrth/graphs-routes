@@ -15,9 +15,6 @@ def set_airports():
 
     return [airports_csv, airports]
 
-win_width = None
-win_height = None
-
 all_routes = set_routes()
 routes_csv = all_routes[0]
 routes = all_routes[1]
@@ -27,14 +24,6 @@ airports_csv = all_airports[0]
 airports = all_airports[1]
 
 eel.init("web")
-
-@eel.expose
-def set_win_size(w, h):
-    global win_width
-    global win_height
-
-    win_width = w
-    win_height = h
 
 @eel.expose
 def add_route(file_name, rows):
@@ -109,4 +98,4 @@ def full_graph(option):
     
     graph.complete_graph()
 
-eel.start("index.html", size=(1366, 768))
+eel.start("index.html")
