@@ -6,43 +6,40 @@
         <p>Airports System</p>
     </div>
     <div class="main-body" id="routes-main">
-        <h1>Recent Jobs</h1>
+        <h1>Filter routes</h1>
+        
+        <div class="search_section">
+            <div class="search_bar">
+                <select name="" id="search_origin">
+                </select>
+            </div>
+    
+            <div class="search_bar">
+                <select name="" id="search_destination">
+                </select>
+            </div>
 
-        <div class="search_bar">
-            <input type="search" placeholder="Search job here...">
-            <select name="" id="">
-                <option>Category</option>
-                <option>Web Design</option>
-                <option>App Design</option>
-                <option>App Development</option>
-            </select>
-            <select class="filter">
-                <option>Filter</option>
-            </select>
-        </div>
+            <div class="search_bar">
+                <select name="" id="search_kind">
+                    <option value="time">Time</option>
+                    <option value="distance">Distance</option>
+                </select>
+            </div>
 
-        <div class="tags_bar">
-            <div class="tag">
-                <i class="fas fa-times"></i>
-                <span>Programming</span>
-            </div>
-            <div class="tag">
-                <i class="fas fa-times"></i>
-                <span>Design</span>
-            </div>
-            <div class="tag">
-                <i class="fas fa-times"></i>
-                <span>PHP</span>
-            </div>
-            <div class="tag">
-                <i class="fas fa-times"></i>
-                <span>JavaScript</span>
+            <div class="search_bar" style="margin-left: 30px;">
+                <div class="tag" id="filter-route-btn">
+                    <span>Search</span>
+                    <i class="fa-solid fa-arrow-right" style="color: #141414; padding-left: 8px;"></i>
+                </div>
             </div>
         </div>
 
         <div class="row">
-            <p>There are more than <span>400</span> Jobs</p>
+            <p>Find <span>many</span> routes</p>
             <a href="#">See all</a>
+        </div>
+
+        <div id="routes-cards">
         </div>
 
         <div id="demo-modal" class="modal">

@@ -30,7 +30,7 @@ nav{
   background: #fff;
 }
 .navbar{
-  width: 85%;
+  width: 93%;
   margin: 0 auto;
 }
 
@@ -91,9 +91,14 @@ nav i{
 h1{
   margin: 20px 10px;
 }
+
+.search_section {
+  display: flex;
+}
+
 .search_bar{
   display: flex;
-  padding: 10px;
+  padding-bottom: 5px;
   justify-content: space-between;
 }
 .search_bar input{

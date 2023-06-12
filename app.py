@@ -1,27 +1,40 @@
 import eel
 from src.controllers.csv_controller import FileCSV
 from src.controllers.utils_controller import Utils
+from src.graphs.graph import GraphClass
 
 def set_routes():
-    routes = []
-
     routes_csv = FileCSV.read_csv('routes.csv', ',')
     routes = Utils.load_routes(routes_csv)
 
-    return routes
+    return [routes_csv, routes]
 
 def set_airports():
-    airports = []
-
     airports_csv = FileCSV.read_csv('airports.csv', ',')
     airports = Utils.load_airports(airports_csv)
 
-    return airports
+    return [airports_csv, airports]
 
-routes = set_routes()
-airports = set_airports()
+win_width = None
+win_height = None
+
+all_routes = set_routes()
+routes_csv = all_routes[0]
+routes = all_routes[1]
+
+all_airports = set_airports()
+airports_csv = all_airports[0]
+airports = all_airports[1]
 
 eel.init("web")
+
+@eel.expose
+def set_win_size(w, h):
+    global win_width
+    global win_height
+
+    win_width = w
+    win_height = h
 
 @eel.expose
 def add_route(file_name, rows):
@@ -63,7 +76,7 @@ def add_airport(file_name, rows):
 @eel.expose
 def edit_route(row):
     Utils.edit_route(row)
-    return set_routes()
+    return set_routes()[1]
 
 @eel.expose
 def get_airports():
@@ -75,4 +88,25 @@ def get_routes():
 
     return routes
 
-eel.start("index.html")
+@eel.expose
+def shortes_path_gph(routes, origin, destination, option):  
+
+    graph = GraphClass()
+
+    for r in routes:
+        graph.add_edge(r["origin"], r["destination"], r[option])
+
+    shortest_path = graph.dijkstra(origin, destination)
+    graph.short_path_network(shortest_path)
+
+@eel.expose
+def full_graph(option):
+    global routes
+    graph = GraphClass()
+
+    for r in routes:
+        graph.add_edge(r["origin"], r["destination"], r[option])
+    
+    graph.complete_graph()
+
+eel.start("index.html", size=(1366, 768))
