@@ -245,6 +245,8 @@ async function manageRoutes() {
 
     if (newRoutesData) {
       setRoutes(newRoutesData)
+    } else {
+      alert("The route already exists")
     }
 
     form.reset();
