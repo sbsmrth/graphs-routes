@@ -158,6 +158,11 @@ function manageModal(index) {
 
     const row = [route["origin"], route["destination"], time, distance];
     eel.edit_route(row)(setRoutes);
+    routes.find(r => {
+      if(r["destination"] == route["origin"] && r["origin"] == route["destination"]) {
+        eel.edit_route([route["destination"], route["origin"], time, distance])(setRoutes)
+      }
+    })
     manageDashboard();
   });
 }
