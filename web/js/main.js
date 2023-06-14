@@ -241,7 +241,7 @@ async function manageRoutes() {
     const distance = document.getElementById("routes-f-distance").value;
 
     const rows = [[originIata, destinationIata, time, distance]];
-    const newRoutesData = await eel.add_route("routes.csv", rows);
+    const newRoutesData = await eel.add_route("routes.csv", rows)();
 
     if (newRoutesData) {
       setRoutes(newRoutesData)

@@ -32,7 +32,7 @@ def add_route(file_name, rows):
 
     for r in routes:
         if r['origin'] == row[0] and r['destination'] == row[1]:
-            return
+            return False
         
     FileCSV.append_to_csv(file_name, rows)
     routes.append({
