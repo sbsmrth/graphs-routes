@@ -164,7 +164,7 @@ function manageModal(index) {
 
 async function manageAirports() {
   await loadPage("./html/airports-form.html", "#app-main");
-  const iataToName = JSON.parse(localStorage.getItem('iataToName'))
+  const iataToName = JSON.parse(localStorage.getItem("iataToName"));
 
   const form = document.getElementById("reg-f-airports");
   form.addEventListener("submit", (e) => {
@@ -182,9 +182,9 @@ async function manageAirports() {
     if (!iataToName[iata]) {
       eel.add_airport("airports.csv", rows)(setAirports);
       iataToName[iata] = name;
-      localStorage.setItem('iataToName', JSON.stringify(iataToName))
+      localStorage.setItem("iataToName", JSON.stringify(iataToName));
     } else {
-      alert("IATA already exists")
+      alert("IATA already exists");
     }
 
     form.reset();
@@ -251,9 +251,9 @@ async function manageRoutes() {
     const newRoutesData = await eel.add_route("routes.csv", rows)();
 
     if (newRoutesData) {
-      setRoutes(newRoutesData)
+      setRoutes(newRoutesData);
     } else {
-      alert("The route already exists")
+      alert("The route already exists");
     }
 
     form.reset();
@@ -266,7 +266,8 @@ function manageDestChange(data, filterData, routes) {
   const destSelect = document.getElementById("routes-f-destination");
   const orgSelectedIata = data[originSelect.selectedIndex]["iata"];
   const desSelectedIata = filterData[destSelect.selectedIndex]["iata"];
-  const distanceSelect = document.getElementById("routes-f-distance");
+  const distanceInput = document.getElementById("routes-f-distance");
+  const timeInput = document.getElementById("routes-f-time");
 
   const findRoute = routes.find(
     (route) =>
@@ -274,11 +275,15 @@ function manageDestChange(data, filterData, routes) {
       route["destination"] == orgSelectedIata
   );
   if (findRoute) {
-    distanceSelect.value = findRoute["distance"];
-    distanceSelect.disabled = true;
+    distanceInput.value = findRoute["distance"];
+    timeInput.value = findRoute["time"];
+    distanceInput.disabled = true;
+    timeInput.disabled = true;
   } else {
-    distanceSelect.value = "";
-    distanceSelect.disabled = false;
+    distanceInput.value = "";
+    timeInput.value = "";
+    distanceInput.disabled = false;
+    timeInput.disabled = false;
   }
 }
 
