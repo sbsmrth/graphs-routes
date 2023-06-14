@@ -164,6 +164,7 @@ function manageModal(index) {
 
 async function manageAirports() {
   await loadPage("./html/airports-form.html", "#app-main");
+  const iataToName = JSON.parse(localStorage.getItem('iataToName'))
 
   const form = document.getElementById("reg-f-airports");
   form.addEventListener("submit", (e) => {
@@ -178,7 +179,13 @@ async function manageAirports() {
     const iata = document.getElementById("airport-f-iata").value;
 
     const rows = [[name, iata, location]];
-    eel.add_airport("airports.csv", rows)(setAirports);
+    if (!iataToName[iata]) {
+      eel.add_airport("airports.csv", rows)(setAirports);
+      iataToName[iata] = name;
+      localStorage.setItem('iataToName', JSON.stringify(iataToName))
+    } else {
+      alert("IATA already exists")
+    }
 
     form.reset();
   });
