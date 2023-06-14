@@ -227,7 +227,7 @@ async function manageRoutes() {
 
   destSelect.dispatchEvent(new Event("change"));
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (!okForm("#reg-f-routes")) {
@@ -241,7 +241,11 @@ async function manageRoutes() {
     const distance = document.getElementById("routes-f-distance").value;
 
     const rows = [[originIata, destinationIata, time, distance]];
-    eel.add_route("routes.csv", rows)(setRoutes);
+    const newRoutesData = await eel.add_route("routes.csv", rows);
+
+    if (newRoutesData) {
+      setRoutes(newRoutesData)
+    }
 
     form.reset();
     originSelect.dispatchEvent(new Event("change"));
