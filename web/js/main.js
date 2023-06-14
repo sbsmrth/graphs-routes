@@ -109,8 +109,6 @@ async function manageDashboard() {
     const cardsTemplate = createCards(newRoutes);
     if (cardsTemplate) {
       document.getElementById("routes-cards").innerHTML = cardsTemplate;
-
-      eel.shortes_path_gph(routes, originIata, destinationIata, filter);
     }
 
     const err = await eel.shortes_path_gph(routes, originIata, destinationIata, filter)();
@@ -186,10 +184,12 @@ async function manageRoutes() {
 
   const form = document.getElementById("reg-f-routes");
   const data = JSON.parse(localStorage.getItem("airports"));
+  const routes = JSON.parse(localStorage.getItem('routes'))
   let filterData = [];
   data.forEach((a) => (a.toString = `${a["name"]} (${a["iata"]})`));
 
   const originSelect = document.getElementById("routes-f-origin");
+  const distanceSelect = document.getElementById('routes-f-distance')
   const originOptions = toOptionList({
     items: data,
     value: "toString",
@@ -208,10 +208,27 @@ async function manageRoutes() {
     });
 
     const destinationSelect = document.getElementById("routes-f-destination");
-    destinationSelect.innerHTML = destinationOptions;
+    destinationSelect.innerHTML = destinationOptions;    
   });
 
   originSelect.dispatchEvent(new Event("change"));
+
+  const destSelect = document.getElementById('routes-f-destination')
+  destSelect.addEventListener('change', () => {
+    const orgSelectedIata = data[originSelect.selectedIndex]["iata"];
+    const desSelectedIata = filterData[destSelect.selectedIndex]["iata"]
+
+    routes.forEach(route => {
+      
+      if (route["origin"] == desSelectedIata && route["destination"] == orgSelectedIata) {
+        console.log("inside")
+        distanceSelect.value = route["distance"]
+        distanceSelect.disabled = true
+      } 
+    })
+  })
+
+  destSelect.dispatchEvent(new Event("change"));
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
