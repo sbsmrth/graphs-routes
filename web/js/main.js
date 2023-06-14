@@ -111,9 +111,14 @@ async function manageDashboard() {
       document.getElementById("routes-cards").innerHTML = cardsTemplate;
     }
 
-    const err = await eel.shortes_path_gph(routes, originIata, destinationIata, filter)();
+    const err = await eel.shortes_path_gph(
+      routes,
+      originIata,
+      destinationIata,
+      filter
+    )();
     if (err) {
-      alert('There is no a conection between the airports')
+      alert("There is no a conection between the airports");
     }
   });
 
@@ -184,12 +189,12 @@ async function manageRoutes() {
 
   const form = document.getElementById("reg-f-routes");
   const data = JSON.parse(localStorage.getItem("airports"));
-  const routes = JSON.parse(localStorage.getItem('routes'))
+  const routes = JSON.parse(localStorage.getItem("routes"));
   let filterData = [];
   data.forEach((a) => (a.toString = `${a["name"]} (${a["iata"]})`));
 
   const originSelect = document.getElementById("routes-f-origin");
-  const distanceSelect = document.getElementById('routes-f-distance')
+
   const originOptions = toOptionList({
     items: data,
     value: "toString",
@@ -208,25 +213,17 @@ async function manageRoutes() {
     });
 
     const destinationSelect = document.getElementById("routes-f-destination");
-    destinationSelect.innerHTML = destinationOptions;    
+    destinationSelect.innerHTML = destinationOptions;
+
+    manageDestChange(data, filterData, routes);
   });
 
   originSelect.dispatchEvent(new Event("change"));
 
-  const destSelect = document.getElementById('routes-f-destination')
-  destSelect.addEventListener('change', () => {
-    const orgSelectedIata = data[originSelect.selectedIndex]["iata"];
-    const desSelectedIata = filterData[destSelect.selectedIndex]["iata"]
-
-    routes.forEach(route => {
-      
-      if (route["origin"] == desSelectedIata && route["destination"] == orgSelectedIata) {
-        console.log("inside")
-        distanceSelect.value = route["distance"]
-        distanceSelect.disabled = true
-      } 
-    })
-  })
+  const destSelect = document.getElementById("routes-f-destination");
+  destSelect.addEventListener("change", () =>
+    manageDestChange(data, filterData, routes)
+  );
 
   destSelect.dispatchEvent(new Event("change"));
 
@@ -249,6 +246,27 @@ async function manageRoutes() {
     form.reset();
     originSelect.dispatchEvent(new Event("change"));
   });
+}
+
+function manageDestChange(data, filterData, routes) {
+  const originSelect = document.getElementById("routes-f-origin");
+  const destSelect = document.getElementById("routes-f-destination");
+  const orgSelectedIata = data[originSelect.selectedIndex]["iata"];
+  const desSelectedIata = filterData[destSelect.selectedIndex]["iata"];
+  const distanceSelect = document.getElementById("routes-f-distance");
+
+  const findRoute = routes.find(
+    (route) =>
+      route["origin"] == desSelectedIata &&
+      route["destination"] == orgSelectedIata
+  );
+  if (findRoute) {
+    distanceSelect.value = findRoute["distance"];
+    distanceSelect.disabled = true;
+  } else {
+    distanceSelect.value = "";
+    distanceSelect.disabled = false;
+  }
 }
 
 async function showAirports() {
